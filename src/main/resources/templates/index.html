@@ -12,7 +12,24 @@
 	Type your text:<input type="text" name="text_id" id="text_id"/></br>
 	<input type="button" name="displayText" id="displayText" value="DONE" onclick="displayPassedText();"/></br>
 	<p id="test"></p></br>
-	
+	<b>USER RELATED INFO</b> </br></br>
+	<form action ="/index.html">
+	Type your Name:<input type="text" name="name_id" id="name_id" /></br>
+	Type your Submission:<input type="text" name="post_id" id="post_id" /></br>
+	Type your city:<input type="text" name="city_id" id = "city_id"/></br>
+	<!--  <input type="button" name="getTemp" id="getTemp" value="GET TEMP" onclick="fn_getWeatherByLL();"/></br> -->
+	<p id="pl"></p>
+	<input type="button" name="done" id="submission" value="DONE" onclick="postText()"/></br>
+
+	<p id="displayname"></p>
+	<p id="displaysubmission"></p>
+	<p id="displaycity"></p>
+	<p id="displaylng"></p>
+	<b>Get all the posts entered by the user</b></br>
+	Type your Name:<input type="text" name="namepost_id" id="namepost_id" /></br>
+	<input type="button" name="done" id="getPost_id" value="DONE" onclick="getSubmissionListByUser()"/></br>
+	<div id="displayListPost"></div>
+	</form>
 	<script>
 	// On click of button, value passed in textbox is passed to service and displayed back
 	function displayPassedText() {
@@ -29,6 +46,146 @@
 	        }
 		});
 	}
+	// On click of button for user related info, name and text is submitted as post and 
+	// values are displayed
+
+ function getSubmissionListByUser() {
+	var inputVal = document.getElementById("namepost_id").value;
+	console.log("ww"+inputVal);
+   $.ajax({
+        url: "/getsubmission/"+inputVal,
+        type: "GET",
+        success: function (data) {
+        	$("#displayListPost").html('');
+        	if(data.length==0)
+        		{alert("name doesn't exists in the system")};
+        	var test = '';
+        	for(var i=0; i<data.length; i++)
+        		{
+        		test +='<div> <input type="hidden" name="post_ids" id="'+data[i].postid+'" value="'+data[i].postid+'" />' + '</div>';
+        		test +='<div id="citi_id"> City is:'+data[i].city +'</div>';
+        		test +='<div id="latitude_id"> Latitude is:'+data[i].lat +'</div>';
+        		test +='<div id="longitude_id"> Longitude is:'+data[i].lng +'</div>';
+        		test +='<div id="latitude_id"> Temperature in Celsius is:'+data[i].temperature +'</div>';
+        		test +='<div id="def"><p id ="abc"><p/> Post is:' + data[i].post + '</br><p id="lat"></p> Respond:<input type="text" name="respondtext_id" id="respondtext_id'+data[i].postid+'" /></br><input type="button" name="response" id="response_id'+data[i].postid+'" value="SUBMIT RESPONSE" onclick="submitResponse('+data[i].postid+');"/></br><p id="opp'+data[i].postid+'">Response is:</p></div>'; 
+        		
+        		}
+        	
+        	$("#displayListPost").append(test);
+        	
+        }, error: function (jqXHR, textStatus, errorThrown) {
+        }
+	});
+}
+ function submitResponse(id) {
+	 var pp =document.getElementById(id).value;
+	 console.log("pp"+pp);
+	var r =document.getElementById("respondtext_id"+id).value;
+	console.log("rr"+r);
+	response: $("#respondtext_id").val();
+	console.log("xx"+pp);
+		var modelObj = {
+				response: r ,
+				postid: pp
+		};
+		console.log("postid data:"+modelObj.postid);
+		console.log("respond data:"+modelObj.response);
+		 $.ajax({
+	            type: "POST",
+	            url: "/postsubmission/response",
+	            headers: {
+	                "Content-Type": "application/json"
+	            },
+	            data: JSON.stringify(modelObj),
+	            success: function (data) {
+	            	$("#opp"+id).html(data.response);
+	            	console.log("POST API RESPONSE::"+data);
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	            }
+	        });
+		 
+	}
+ function postText(){
+	  //API Variables
+   var geocoder =  new google.maps.Geocoder();
+   var city = document.getElementById("city_id").value;
+   console.log("city"+ city.value);
+   if(city.value==null||document.getElementById("name_id").value==null ||document.getElementById("post_id").value==null )
+	   {alert("You have empty fields");}
+   
+    geocoder.geocode( { 'address': city_id.value}, 
+	function(results, status) {
+ if (status == google.maps.GeocoderStatus.OK) {
+  // alert("location : " + results[0].geometry.location.lat() + " " +results[0].geometry.location.lng()); 
+    lat = results[0].geometry.location.lat();
+    lng = results[0].geometry.location.lng();
+console.log("latitude"+lat);
+console.log("longitude"+lng);
+var modelObj = {
+		name: $("#name_id").val(),
+		post: $("#post_id").val(),
+		city: $("#city_id").val(),
+		lat: lat,
+		lng: lng
+};
+
+
+ $.ajax({
+        type: "POST",
+        url: "/postsubmission",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify(modelObj),
+        success: function (data) {
+        	$("#displayname").html(data.name);
+        	$("#displaysubmission").html(data.post);
+        	$("#displaycity").html(data.city);
+        	console.log("POST API RESPONSE::"+data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+ 
+
+   $("#lat_id").html(lat);
+   $("#lng_id").html(lng);
+ } else {
+   alert("Something got wrong " + status);
+ }
+});
+    	}
+	/* function fn_getWeatherByLL(id){
+		  //API Variables
+		  var proxy = 'https://cors-anywhere.herokuapp.com/';
+		  var dsAPI = "https://api.darksky.net/forecast/";
+		  var dsKey = "580d8d4dad07eb319481935f52eb9bc6" + "/";
+		  var dsParams = "?exclude=minutely,hourly,daily,alerts,flags&units=auto";
+		  //Concatenate API Variables into a URLRequest
+		  
+		  var URLRequest = proxy + dsAPI + dsKey + 43.6532 + "," +79.3832 + dsParams
+
+		  //Make the jQuery.getJSON request
+		  $.getJSON( URLRequest )
+		    //Success promise
+		    .done(function( data ) {
+		      var wSummary = data.currently.summary;
+		      var wTemperature = data.currently.temperature;
+		      console.log("temperature"+wTemperature)
+		      
+		      $("#latitude_id").html(data.currently.temperature);
+		      // lots of results available on the data object
+		      // use the results to populate the GUI here
+		    })
+		    //Error promise
+		    .fail(function() {
+		      alert('Sorry, something bad happened when retrieving the weather');
+		    }
+		  );
+		}
+		
+ */	
 	</script>
 	</body>
 </html>
