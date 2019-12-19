@@ -79,15 +79,16 @@ public class MockMvcStandaloneTest {
 	 * assertThat(response.getContentAsString()).isEqualTo("null"); }
 	 */
 
-	/*
-	 * @Test public void postSubmissionTest() throws Exception { // when
-	 * MockHttpServletResponse response = mvc.perform(
-	 * post("/postsubmission/").contentType(MediaType.APPLICATION_JSON).content(
-	 * submissionssuperhero.write(new Submissions("she is very dangerous", "bojjo",
-	 * "toronto","12.3322","-30.444")).getJson() )).andReturn().getResponse();
-	 * 
-	 * // then
-	 * assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value()); }
-	 */
+	    @Test
+	    public void postSubmissionTest() throws Exception {
+	        // when
+	        MockHttpServletResponse response = mvc.perform(
+	                post("/postsubmission/").contentType(MediaType.APPLICATION_JSON).content(
+	                		submissionssuperhero.write(new Submissions("she is very dangerous", "bojjo", "toronto","12.3322","-30.444")).getJson()
+	                )).andReturn().getResponse();
+
+	        // then
+	        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
+	    }
 		
 }

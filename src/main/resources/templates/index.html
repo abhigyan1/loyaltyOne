@@ -111,6 +111,8 @@
    var geocoder =  new google.maps.Geocoder();
    var city = document.getElementById("city_id").value;
    console.log("city"+ city.value);
+   if(city.value==null||document.getElementById("name_id").value==null ||document.getElementById("post_id").value==null )
+	   {alert("You have empty fields");}
    
     geocoder.geocode( { 'address': city_id.value}, 
 	function(results, status) {
