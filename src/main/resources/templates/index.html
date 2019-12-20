@@ -53,7 +53,7 @@
 	var inputVal = document.getElementById("namepost_id").value;
 	console.log("ww"+inputVal);
    $.ajax({
-        url: "/getsubmission/"+inputVal,
+        url: "/api/vi/getsubmission/"+inputVal,
         type: "GET",
         success: function (data) {
         	$("#displayListPost").html('');
@@ -92,7 +92,7 @@
 		console.log("respond data:"+modelObj.response);
 		 $.ajax({
 	            type: "POST",
-	            url: "/postsubmission/response",
+	            url: "/api/vi/postsubmission/response",
 	            headers: {
 	                "Content-Type": "application/json"
 	            },
@@ -131,7 +131,7 @@ var modelObj = {
 
  $.ajax({
         type: "POST",
-        url: "/postsubmission",
+        url: "/api/vi/postsubmission",
         headers: {
             "Content-Type": "application/json"
         },

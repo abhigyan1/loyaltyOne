@@ -49,7 +49,7 @@ public class MockMvcStandaloneTest {
 
     // when
     MockHttpServletResponse response = mvc.perform(
-            get("/getsubmission/tua")
+            get("/api/vi/getsubmission/tua")
                     .accept(MediaType.APPLICATION_JSON))
             .andReturn().getResponse();
 
@@ -63,7 +63,7 @@ public class MockMvcStandaloneTest {
 	
 	  @Test public void postSubmissionTest() throws Exception { // when
 	  MockHttpServletResponse response = mvc.perform(
-	                     post("/postsubmission/")
+	                     post("/api/vi/postsubmission/")
 	                        .contentType(MediaType.APPLICATION_JSON)
 	                        .content(submissionssuperhero
 	                        .write(new Submissions("Hello this is my comment", "abbie",
@@ -79,7 +79,7 @@ public class MockMvcStandaloneTest {
 		  given(submissionsService.getOne(postid))
           .willReturn(new Submissions(102,"respond2"));
       MockHttpServletResponse response = mvc.perform(
-              post("/postsubmission/response")
+              post("/api/vi/postsubmission/response")
               .contentType(MediaType.APPLICATION_JSON)
               .content(submissionssuperhero
               .write(new Submissions(102,"bello","ananya","toronto","43.653226","-79.38318429999998","respond2")).getJson()))

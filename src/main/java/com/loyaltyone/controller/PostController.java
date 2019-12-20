@@ -1,9 +1,7 @@
 package com.loyaltyone.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,15 +10,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.loyaltyone.ExceptionHandler.DefaultExceptionHandler;
 import com.loyaltyone.ExceptionHandler.SubmissionsNotfoundException;
 import com.loyaltyone.entity.Submissions;
 import com.loyaltyone.service.SubmissionsService;
 import com.loyaltyone.service.Temperature;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
+@RequestMapping("/api/vi")
 public class PostController {
 	Logger logger = LoggerFactory.getLogger(PostController.class);
 	@Autowired SubmissionsService submissionService;
@@ -28,6 +29,7 @@ public class PostController {
 	/*
 	 * Persist the name and submission
 	 */
+	@ApiOperation(value = "Post user info", response = Submissions.class)
 	@PostMapping(path="/postsubmission")	
 	public Submissions postSubmission(@RequestBody Submissions submissions) {
 	                  logger.info("User value passed is"+submissions.getName()+submissions.getPost());
@@ -36,8 +38,9 @@ public class PostController {
 	/*
 	 * Fetch all submissions by Name
 	 */
-	
-	  @GetMapping(path="/getsubmission/{name}") 
+
+	@ApiOperation(value = "get user info by passing name", response = List.class)
+	@GetMapping(path="/getsubmission/{name}") 
 	 public List<Submissions> getSubmission(@PathVariable String name) throws IOException, SubmissionsNotfoundException {
 	 logger.info("Name"+name);
 	         List<Submissions> listUser=  submissionService.findSubmissionsByName(name);
@@ -57,8 +60,8 @@ public class PostController {
 	  /*
 	   * Update responses to the submission by postid
 	   */
-	 
-	 @PostMapping(path="/postsubmission/response")
+	@ApiOperation(value = "Submit response on post", response = Submissions.class)
+	@PostMapping(path="/postsubmission/response")
 	public Submissions postResponse (@RequestBody Submissions submissions ){
 		  Submissions submit =submissionService.getOne(submissions.getPostid());
 		              logger.info("postid"+submit.getPost());
@@ -66,4 +69,4 @@ public class PostController {
 	                  Submissions Submission= submissionService.save(submit);
 		    		  return Submission;
 	  }
-}
+	}
