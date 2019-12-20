@@ -16,5 +16,9 @@ public class SubmissionExceptionHandler {
 	public ResponseEntity<Object> temperatureException(SubmissionsNotfoundException exception) {
 	      return new ResponseEntity<>("malformed url", HttpStatus.BAD_REQUEST);
 	   }
+	@ExceptionHandler(value = ResponseNotfoundException.class)
+	public ResponseEntity<Object> responseException(SubmissionsNotfoundException exception) {
+	      return new ResponseEntity<>("Response not found", HttpStatus.NOT_FOUND);
+	   }
 	
 }

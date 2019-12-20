@@ -109,6 +109,49 @@ public Submissions(String post, String name, String city, String lat, String lng
 	this.lat = lat;
 	this.lng = lng;
 }
+/**
+ * @param postid
+ * @param response
+ */
+public Submissions(long postid, String response) {
+	super();
+	this.postid = postid;
+	this.response = response;
+}
+/**
+ * @param postid
+ * @param post
+ * @param name
+ * @param city
+ * @param response
+ */
+public Submissions(long postid, String post, String name, String city, String response) {
+	super();
+	this.postid = postid;
+	this.post = post;
+	this.name = name;
+	this.city = city;
+	this.response = response;
+}
+/**
+ * @param postid
+ * @param post
+ * @param name
+ * @param city
+ * @param lat
+ * @param lng
+ * @param response
+ */
+public Submissions(long postid, String post, String name, String city, String lat, String lng, String response) {
+	super();
+	this.postid = postid;
+	this.post = post;
+	this.name = name;
+	this.city = city;
+	this.lat = lat;
+	this.lng = lng;
+	this.response = response;
+}
 
 
 

@@ -111,9 +111,6 @@
    var geocoder =  new google.maps.Geocoder();
    var city = document.getElementById("city_id").value;
    console.log("city"+ city.value);
-   if(city.value==null||document.getElementById("name_id").value==null ||document.getElementById("post_id").value==null )
-	   {alert("You have empty fields");}
-   
     geocoder.geocode( { 'address': city_id.value}, 
 	function(results, status) {
  if (status == google.maps.GeocoderStatus.OK) {
@@ -122,6 +119,7 @@
     lng = results[0].geometry.location.lng();
 console.log("latitude"+lat);
 console.log("longitude"+lng);
+
 var modelObj = {
 		name: $("#name_id").val(),
 		post: $("#post_id").val(),
@@ -153,6 +151,7 @@ var modelObj = {
    $("#lng_id").html(lng);
  } else {
    alert("Something got wrong " + status);
+  //alert("Please input the city correctly");
  }
 });
     	}

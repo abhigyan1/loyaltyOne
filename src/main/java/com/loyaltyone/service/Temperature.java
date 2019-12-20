@@ -25,13 +25,15 @@ public class Temperature {
 	private ConfigProperties configProp;
 
 	Logger logger = LoggerFactory.getLogger(Temperature.class);
-	public String getTemperatureFromApi(String city) throws IOException
+	public String getTemperatureFromApi(String city) 
 	{
 		StringBuilder result =  new StringBuilder();
 		String API_KEY = configProp.getKey();
 		String location = city;
 		String urlstring= "http://api.openweathermap.org/data/2.5/weather?q="+ location +"&appid=" + API_KEY + "&units ="+configProp.getMetric();
-			
+		String temperature="";	
+		try {
+		
 		    URL url = new URL(urlstring);	
 		    logger.info("url is"+url);
 			URLConnection conn = url.openConnection();
@@ -47,8 +49,14 @@ public class Temperature {
 			logger.info("currentTemperature"+mainMap.get("temp").toString());
 			String kelvin = mainMap.get("temp").toString();
 			logger.info("kelvin"+kelvin);
-			
-		   return temperatureconversion(kelvin);
+			temperature+=temperatureconversion(kelvin);
+		}
+		
+		catch(IOException e)
+		{
+			logger.error("IOError in Temperature"+e.getMessage());
+		}
+		 return  temperature;
 	}
 	private  Map<String, Object> jsonToMap(String str)
 	 {

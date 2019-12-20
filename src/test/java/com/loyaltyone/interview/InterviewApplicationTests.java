@@ -12,6 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;*/
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
+import java.io.IOException;
 import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -33,24 +35,26 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.loyaltyone.config.ConfigProperties;
 import com.loyaltyone.controller.PostController;
 import com.loyaltyone.controller.TextController;
 import com.loyaltyone.entity.Submissions;
 import com.loyaltyone.service.SubmissionsService;
+import com.loyaltyone.service.Temperature;
 
 @SpringBootTest
 class InterviewApplicationTests {
 	
-	private MockMvc mvc;
-	
-	
-	
 	@Autowired 
 	TextController textController;
-      @DisplayName("Test Spring @Autowired Integration")
-	  @Test 
-	  void testGet() { 
+	
+     
+	@DisplayName("Test Spring @Autowired Integration")
+	@Test 
+	public void returnTextTest() { 
     	  String text="text";
 		  assertEquals("text", textController.returnText(text));
 	  }
-     }
+	
+   }

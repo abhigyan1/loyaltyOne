@@ -1,11 +1,11 @@
 package com.loyaltyone.interview;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.loyaltyone.controller.PostController;
-import com.loyaltyone.entity.Submissions;
-import com.loyaltyone.service.SubmissionsService;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,17 +20,10 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.loyaltyone.controller.PostController;
+import com.loyaltyone.entity.Submissions;
+import com.loyaltyone.service.SubmissionsService;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,7 +42,7 @@ public class MockMvcStandaloneTest {
 					.build();
 		}
 		@Test
-		public void getSubmissionTestWhenNameExists() throws Exception 
+		public void getSubmissionTestWhenNameExistsTests() throws Exception 
 		{
 			given(submissionsService.findSubmissionsByName("tua"))
             .willReturn(List.of(new Submissions(32,"hello", "tua", "res")));
@@ -65,29 +58,37 @@ public class MockMvcStandaloneTest {
     assertThat(response.getContentAsString()).isEqualTo(
     		submissionssuperheroList.write(List.of(new Submissions(32,"hello", "tua", "res"))).getJson());
 		}
-		
-	/*
-	 * @Test public void getSubmissionTestWhenNameNotExists() throws Exception {
-	 * List<Submissions> l = new ArrayList<Submissions>(); // given
-	 * given(submissionsDao.findSubmissionsByName("xyz")) .willReturn(l);
-	 * 
-	 * // when MockHttpServletResponse response = mvc.perform(
-	 * get("/superheroes/xyz") .accept(MediaType.APPLICATION_JSON))
-	 * .andReturn().getResponse();
-	 * 
-	 * // then assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-	 * assertThat(response.getContentAsString()).isEqualTo("null"); }
-	 */
+	
 
-	/*
-	 * @Test public void postSubmissionTest() throws Exception { // when
-	 * MockHttpServletResponse response = mvc.perform(
-	 * post("/postsubmission/").contentType(MediaType.APPLICATION_JSON).content(
-	 * submissionssuperhero.write(new Submissions("she is very dangerous", "bojjo",
-	 * "toronto","12.3322","-30.444")).getJson() )).andReturn().getResponse();
-	 * 
-	 * // then
-	 * assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value()); }
-	 */
-		
+	
+	  @Test public void postSubmissionTest() throws Exception { // when
+	  MockHttpServletResponse response = mvc.perform(
+	                     post("/postsubmission/")
+	                        .contentType(MediaType.APPLICATION_JSON)
+	                        .content(submissionssuperhero
+	                        .write(new Submissions("Hello this is my comment", "abbie",
+	                                   "toronto","12.3322","-30.444")).getJson()))
+			                .andReturn()
+			                .getResponse();
+	  // then
+	  assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value()); }
+	 
+	  @Test
+	  public void postResponseTests() throws Exception {
+		  long postid=102;
+		  given(submissionsService.getOne(postid))
+          .willReturn(new Submissions(102,"respond2"));
+      MockHttpServletResponse response = mvc.perform(
+              post("/postsubmission/response")
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(submissionssuperhero
+              .write(new Submissions(102,"bello","ananya","toronto","43.653226","-79.38318429999998","respond2")).getJson()))
+              .andReturn()
+              .getResponse();
+      // then
+      assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value()); }
+	  
+
+	  
+	  
 }

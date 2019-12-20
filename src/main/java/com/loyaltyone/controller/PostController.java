@@ -23,7 +23,7 @@ import com.loyaltyone.service.Temperature;
 @RestController
 public class PostController {
 	Logger logger = LoggerFactory.getLogger(PostController.class);
-	@Autowired SubmissionsService submissionDao;
+	@Autowired SubmissionsService submissionService;
 	@Autowired Temperature temerature;
 	/*
 	 * Persist the name and submission
@@ -31,7 +31,7 @@ public class PostController {
 	@PostMapping(path="/postsubmission")	
 	public Submissions postSubmission(@RequestBody Submissions submissions) {
 	                  logger.info("User value passed is"+submissions.getName()+submissions.getPost());
-	                  submissionDao.save(submissions);
+	                  submissionService.save(submissions);
 	                               return submissions;} 
 	/*
 	 * Fetch all submissions by Name
@@ -40,7 +40,7 @@ public class PostController {
 	  @GetMapping(path="/getsubmission/{name}") 
 	 public List<Submissions> getSubmission(@PathVariable String name) throws IOException, SubmissionsNotfoundException {
 	 logger.info("Name"+name);
-	         List<Submissions> listUser=  submissionDao.findSubmissionsByName(name);
+	         List<Submissions> listUser=  submissionService.findSubmissionsByName(name);
 	                if(!(listUser.isEmpty())) {
 	                     for(Submissions submission : listUser){
 		                      logger.info("submission is here");
@@ -60,12 +60,10 @@ public class PostController {
 	 
 	 @PostMapping(path="/postsubmission/response")
 	public Submissions postResponse (@RequestBody Submissions submissions ){
-		 logger.info("id"+ submissions.getPostid());
-		  Submissions submit =submissionDao.getOne(submissions.getPostid());
+		  Submissions submit =submissionService.getOne(submissions.getPostid());
+		              logger.info("postid"+submit.getPost());
 	                  submit.setResponse(submissions.getResponse());
-	                  Submissions listSubmission= submissionDao.save(submit);
-		    		  return listSubmission;
-		  
+	                  Submissions Submission= submissionService.save(submit);
+		    		  return Submission;
 	  }
-	 
 }
